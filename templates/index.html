@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Screener</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>News Screener</h1>
+        <form id="search-form">
+            <div class="form-group">
+                <label for="category">Enter Category:</label>
+                <input type="text" class="form-control" id="category" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <div id="results" class="mt-4"></div>
+    </div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const category = document.getElementById('category').value;
+            const response = await fetch(`/search`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ category })
+            });
+
+            const resultsContainer = document.getElementById('results');
+            if (response.ok) {
+                const html = await response.text();
+                resultsContainer.innerHTML = html;
+            } else {
+                resultsContainer.innerHTML = '<p>No data found for this category.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
